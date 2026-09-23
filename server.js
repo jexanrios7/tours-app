@@ -107,6 +107,34 @@ app.get('/api/migrate', async (req, res) => {
     }
 });
 
+// Endpoint para limpiar URLs de imágenes locales
+app.post('/api/cleanup-local-images', async (req, res) => {
+    try {
+        console.log('🧹 Limpiando URLs de imágenes locales...');
+        
+        // Actualizar tours que tienen URLs locales
+        const result = await pool.query(`
+            UPDATE tours 
+            SET image_url = NULL 
+            WHERE image_url LIKE '/uploads/%'
+        `);
+        
+        console.log(`✅ Se limpiaron ${result.rowCount} URLs de imágenes locales`);
+        
+        res.json({
+            success: true,
+            message: `Se limpiaron ${result.rowCount} URLs de imágenes locales`,
+            count: result.rowCount
+        });
+    } catch (error) {
+        console.error('Error al limpiar imágenes locales:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al limpiar imágenes locales'
+        });
+    }
+});
+
 // Endpoint para verificar si las tablas existen
 app.get('/api/check-tables', async (req, res) => {
     try {
