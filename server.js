@@ -13,6 +13,14 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 const multer = require('multer');
 const { testConnection, pool } = require('./config/db');
+const cloudinary = require('cloudinary').v2;
+
+// Configurar Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 
 const tourRoutes = require('./routes/tourRoutes');
 const authRoutes = require('./routes/authRoutes');
@@ -62,27 +70,17 @@ const limiter = rateLimit({
 // Aplicar rate limiting a todas las rutas
 app.use('/api/', limiter);
 
-// Configuración de Multer para carga de imágenes
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/uploads/');
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
+// Configuración de Multer para carga de imágenes (usando memoria para Cloudinary)
 const upload = multer({
-    storage: storage,
+    storage: multer.memoryStorage(),
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB máximo
+        fileSize: 5 * 1024 * 1024 // 5MB límite
     },
     fileFilter: function (req, file, cb) {
         const allowedTypes = /jpeg|jpg|png|gif|webp/;
         const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
         const mimetype = allowedTypes.test(file.mimetype);
-
+        
         if (extname && mimetype) {
             return cb(null, true);
         } else {
@@ -90,6 +88,9 @@ const upload = multer({
         }
     }
 });
+
+// Exportar upload para usar en rutas
+module.exports.upload = upload;
 
 // Rate limiting más estricto para login
 const loginLimiter = rateLimit({

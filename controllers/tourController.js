@@ -1,4 +1,29 @@
 const { pool } = require('../config/db');
+const cloudinary = require('cloudinary').v2;
+
+// Helper para subir imagen a Cloudinary
+const uploadImageToCloudinary = async (file) => {
+    try {
+        if (!file) return null;
+        
+        const result = await cloudinary.uploader.upload_stream(
+            {
+                folder: 'tours-app',
+                allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                max_file_size: 5000000 // 5MB
+            },
+            (error, result) => {
+                if (error) throw error;
+                return result;
+            }
+        ).end(file.buffer);
+        
+        return result.secure_url;
+    } catch (error) {
+        console.error('Error al subir imagen a Cloudinary:', error);
+        throw new Error('Error al subir la imagen');
+    }
+};
 
 // Obtener todos los tours (para admin)
 const getAllTours = async (req, res) => {
@@ -96,6 +121,12 @@ const createTour = async (req, res) => {
             });
         }
         
+        // Subir imagen a Cloudinary si se proporcionó un archivo
+        let finalImageUrl = image_url || null;
+        if (req.file) {
+            finalImageUrl = await uploadImageToCloudinary(req.file);
+        }
+        
         // Convertir attractions a array si es string
         const attractionsArray = Array.isArray(attractions) ? attractions : 
                                   (attractions ? attractions.split(',').map(a => a.trim()) : []);
@@ -113,7 +144,7 @@ const createTour = async (req, res) => {
             duration,
             price,
             category,
-            image_url || null,
+            finalImageUrl,
             capacity || 20,
             tour_date || null
         ];
@@ -139,6 +170,12 @@ const updateTour = async (req, res) => {
     try {
         const { id } = req.params;
         const { title, description, attractions, duration, price, category, image_url, is_active, capacity, tour_date } = req.body;
+        
+        // Subir imagen a Cloudinary si se proporcionó un archivo
+        let finalImageUrl = image_url;
+        if (req.file) {
+            finalImageUrl = await uploadImageToCloudinary(req.file);
+        }
         
         // Convertir attractions a array si es string
         const attractionsArray = Array.isArray(attractions) ? attractions : 
@@ -185,9 +222,9 @@ const updateTour = async (req, res) => {
             paramCount++;
         }
         
-        if (image_url !== undefined) {
+        if (finalImageUrl !== undefined) {
             updates.push(`image_url = $${paramCount}`);
-            values.push(image_url);
+            values.push(finalImageUrl);
             paramCount++;
         }
         
