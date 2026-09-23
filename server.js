@@ -189,13 +189,77 @@ testConnection().then(async success => {
     if (success) {
         // Ejecutar migraciones necesarias
         try {
+            // Crear tabla admins si no existe
+            await pool.query(`
+                CREATE TABLE IF NOT EXISTS admins (
+                    id SERIAL PRIMARY KEY,
+                    username VARCHAR(50) UNIQUE NOT NULL,
+                    password VARCHAR(255) NOT NULL,
+                    email VARCHAR(100) UNIQUE NOT NULL,
+                    full_name VARCHAR(100),
+                    is_active BOOLEAN DEFAULT true,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            console.log('✅ Tabla admins creada o ya existe');
+
+            // Crear tabla tours si no existe
+            await pool.query(`
+                CREATE TABLE IF NOT EXISTS tours (
+                    id SERIAL PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    description TEXT,
+                    attractions TEXT[],
+                    duration VARCHAR(50),
+                    price DECIMAL(10, 2),
+                    category VARCHAR(50),
+                    image_url TEXT,
+                    capacity INTEGER,
+                    tour_date DATE,
+                    is_active BOOLEAN DEFAULT true,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            console.log('✅ Tabla tours creada o ya existe');
+
+            // Crear tabla contacts si no existe
+            await pool.query(`
+                CREATE TABLE IF NOT EXISTS contacts (
+                    id SERIAL PRIMARY KEY,
+                    name VARCHAR(100) NOT NULL,
+                    email VARCHAR(100) NOT NULL,
+                    phone VARCHAR(20),
+                    message TEXT NOT NULL,
+                    is_read BOOLEAN DEFAULT false,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+            console.log('✅ Tabla contacts creada o ya existe');
+
+            // Agregar columna is_read a contacts si no existe
             await pool.query(`
                 ALTER TABLE contacts 
                 ADD COLUMN IF NOT EXISTS is_read BOOLEAN DEFAULT FALSE
             `);
             console.log('✅ Migración de contacts.is_read ejecutada');
+
+            // Insertar admin por defecto si no existe
+            const adminExists = await pool.query('SELECT id FROM admins WHERE username = $1', ['admin']);
+            if (adminExists.rows.length === 0) {
+                const bcrypt = require('bcrypt');
+                const hashedPassword = await bcrypt.hash('admin123', 10);
+                await pool.query(`
+                    INSERT INTO admins (username, password, email, full_name, is_active)
+                    VALUES ($1, $2, $3, $4, $5)
+                `, ['admin', hashedPassword, 'admin@tours.com', 'Administrador', true]);
+                console.log('✅ Admin por defecto creado (admin/admin123)');
+            } else {
+                console.log('ℹ️  Admin por defecto ya existe');
+            }
         } catch (error) {
-            console.log('ℹ️  Migración de contacts.is_read ya existe o no fue necesaria');
+            console.error('❌ Error en migraciones:', error);
         }
         
         startServer();
