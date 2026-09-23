@@ -112,6 +112,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', loginLimiter, authRoutes);
 app.use('/api/tours', tourRoutes);
 
+// Endpoint para ejecutar migraciones manualmente
+app.get('/api/migrate', async (req, res) => {
+    try {
+        await runMigrations();
+        res.json({
+            success: true,
+            message: 'Migraciones ejecutadas exitosamente'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error al ejecutar migraciones',
+            error: error.message
+        });
+    }
+});
+
 // Ruta principal - servir index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
