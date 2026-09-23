@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Agencia de Tours - Descubre los mejores destinos de viaje">
+    <title>Agencia de Tours | Viajes Inolvidables</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%230d6efd' d='M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480V396.4c0-4 1.5-7.8 4.2-10.7L331.8 202.8c5.8-6.3 5.6-16-.4-22s-15.7-6.4-22-.4L106 360.8 17.7 316.6C7.1 311.3 .3 300.7 0 288.9s5.9-22.8 16.1-28.7l448-256c10.7-6.1 23.9-5.5 34 1.4z'/></svg>">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-plane-departure me-2"></i>
+                Agencia de Tours
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#tours">Tours</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">
+                            <i class="fas fa-user-shield me-1"></i> Admin
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="display-4 fw-bold text-white mb-4">
+                        Descubre el Mundo con Nosotros
+                    </h1>
+                    <p class="lead text-white mb-4">
+                        Experiencias únicas, destinos increíbles y memorias que durarán toda la vida
+                    </p>
+                    <a href="#tours" class="btn btn-light btn-lg px-5">
+                        <i class="fas fa-compass me-2"></i> Explorar Tours
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pickup Location Section -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-map-marker-alt text-primary fa-2x me-3"></i>
+                        <h2 class="mb-0 fw-bold">Puntos de Salida</h2>
+                    </div>
+                    <h3 class="text-primary mb-3">Zona Metropolitana de Guadalajara</h3>
+                    <p class="text-muted mb-4">
+                        Realizamos salidas desde toda la zona metropolitana de Guadalajara para tu comodidad.
+                        No necesitas desplazarte al centro, nosotros te recogemos en el punto más cercano a tu ubicación.
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>Guadalajara Centro</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>Zapopan</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>Tlaquepaque</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>Tonalá</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>San Pedro Tlaquepaque</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                <span>Y más municipios</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="bg-primary bg-opacity-10 rounded-3 p-5">
+                        <i class="fas fa-bus text-primary fa-5x mb-4"></i>
+                        <h4 class="fw-bold mb-3">Transporte Incluido</h4>
+                        <p class="text-muted">
+                            Transporte confortable con aire acondicionado desde tu punto de salida hasta el destino y regreso.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search and Filter Section -->
+    <section class="search-section py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <h4 class="mb-4">
+                                <i class="fas fa-search me-2"></i> Buscar tu Tour Perfecto
+                            </h4>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <input type="text" id="searchInput" class="form-control" 
+                                           placeholder="Buscar por nombre o palabra clave...">
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="categoryFilter" class="form-select">
+                                        <option value="">Todas las categorías</option>
+                                        <option value="Aventura">Aventura</option>
+                                        <option value="Cultural">Cultural</option>
+                                        <option value="Playa">Playa</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="priceFilter" class="form-select">
+                                        <option value="">Cualquier precio</option>
+                                        <option value="0-200">Menos de $200</option>
+                                        <option value="200-500">$200 - $500</option>
+                                        <option value="500-1000">$500 - $1000</option>
+                                        <option value="1000+">Más de $1000</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tours Section -->
+    <section id="tours" class="tours-section py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold">Nuestros Tours</h2>
+                <p class="lead text-muted">Explora nuestra selección de experiencias únicas</p>
+            </div>
+            
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-3">Cargando tours...</p>
+            </div>
+
+            <!-- Tours Grid -->
+            <div id="toursGrid" class="row g-4" style="display: none;">
+                <!-- Tours will be loaded here dynamically -->
+            </div>
+
+            <!-- No Results Message -->
+            <div id="noResults" class="text-center py-5" style="display: none;">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4>No se encontraron tours</h4>
+                <p class="text-muted">Intenta con otros criterios de búsqueda</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold">Contáctanos</h2>
+                <p class="lead text-muted">Estamos aquí para ayudarte a planificar tu próxima aventura</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6 mx-auto">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <form id="contactForm">
+                                <div class="mb-3">
+                                    <label for="contactName" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="contactName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contactEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="contactEmail" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contactPhone" class="form-label">Teléfono (opcional)</label>
+                                    <input type="tel" class="form-control" id="contactPhone" placeholder="Ej: 523338442214">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contactMessage" class="form-label">Mensaje</label>
+                                    <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-paper-plane me-2"></i> Enviar Mensaje
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Media Floating Buttons -->
+    <div class="social-buttons">
+        <a href="https://wa.me/523338442214?text=¡Hola! Estoy interesado/a en conocer más sobre sus tours de viaje. ¿Podrían darme información sobre los destinos disponibles y las mejores ofertas del momento?" target="_blank" class="social-btn whatsapp" title="WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+        <a href="#" target="_blank" class="social-btn instagram" title="Instagram">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <a href="#" target="_blank" class="social-btn facebook" title="Facebook">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="#" target="_blank" class="social-btn tiktok" title="TikTok">
+            <i class="fab fa-tiktok"></i>
+        </a>
+    </div>
+
+    <!-- Tour Detail Modal -->
+    <div class="modal fade" id="tourDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tourDetailTitle">Detalle del Tour</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img id="tourDetailImage" src="" alt="Tour" class="img-fluid rounded mb-3" style="max-height: 300px; object-fit: cover;">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <span class="badge bg-primary" id="tourDetailCategory"></span>
+                            </div>
+                            <div class="mb-3">
+                                <i class="fas fa-clock text-muted me-2"></i>
+                                <span id="tourDetailDuration"></span>
+                            </div>
+                            <div class="mb-3">
+                                <i class="fas fa-dollar-sign text-muted me-2"></i>
+                                <span class="fw-bold text-primary fs-4" id="tourDetailPrice"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h6>Descripción</h6>
+                        <p id="tourDetailDescription" class="text-muted"></p>
+                    </div>
+                    <div class="mt-3">
+                        <h6>Atracciones</h6>
+                        <div id="tourDetailAttractions"></div>
+                    </div>
+                    <div class="mt-3">
+                        <h6>Capacidad</h6>
+                        <div id="tourDetailCapacity"></div>
+                    </div>
+                    <div class="mt-3">
+                        <h6>Fecha del Tour</h6>
+                        <div id="tourDetailDate"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-success" id="tourDetailReserveBtn">
+                        <i class="fab fa-whatsapp me-2"></i>Reservar por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>
+                        <i class="fas fa-plane-departure me-2"></i>
+                        Agencia de Tours
+                    </h5>
+                    <p class="text-muted">Tu próxima aventura comienza aquí.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-muted mb-0">
+                        &copy; 2024 Agencia de Tours. Todos los derechos reservados.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong class="me-auto" id="toastTitle">Notificación</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+                Mensaje de notificación
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Custom JS -->
+    <script src="js/app.js"></script>
+</body>
+</html>

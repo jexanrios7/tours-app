@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Panel Administrativo - Agencia de Tours">
+    <title>Panel Administrativo - Agencia de Tours</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23dc3545' d='M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z'/></svg>">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="admin-body">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/admin">
+                <i class="fas fa-cogs me-2"></i>Panel Administrativo
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" target="_blank">
+                            <i class="fas fa-external-link-alt me-1"></i> Ver Sitio
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> <span id="userName">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" id="changePasswordBtn">
+                                <i class="fas fa-key me-2"></i>Cambiar Contraseña
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-5 pt-4">
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Total Tours</h6>
+                                <h3 class="mb-0" id="statTotalTours">-</h3>
+                            </div>
+                            <i class="fas fa-map-marked-alt fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Tours Activos</h6>
+                                <h3 class="mb-0" id="statActiveTours">-</h3>
+                            </div>
+                            <i class="fas fa-check-circle fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Precio Promedio</h6>
+                                <h3 class="mb-0" id="statAvgPrice">-</h3>
+                            </div>
+                            <i class="fas fa-dollar-sign fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Rango de Precios</h6>
+                                <h5 class="mb-0" id="statPriceRange">-</h5>
+                            </div>
+                            <i class="fas fa-chart-line fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title">Mensajes</h6>
+                                <h3 class="mb-0" id="statMessages">-</h3>
+                            </div>
+                            <i class="fas fa-envelope fa-2x opacity-50"></i>
+                        </div>
+                        <button class="btn btn-light btn-sm mt-2 w-100" id="viewAllMessagesBtn">
+                            <i class="fas fa-list me-2"></i>Ver Todos
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tours Management -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>Gestión de Tours
+                    </h5>
+                    <button class="btn btn-primary" id="addTourBtn">
+                        <i class="fas fa-plus me-2"></i>Nuevo Tour
+                    </button>
+                </div>
+                <!-- Tabs -->
+                <ul class="nav nav-tabs" id="tourTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="availableTab" data-bs-toggle="tab" data-bs-target="#availableTours" type="button" role="tab" aria-selected="true">
+                            <i class="fas fa-check-circle me-2"></i>Tours Disponibles
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="unavailableTab" data-bs-toggle="tab" data-bs-target="#unavailableTours" type="button" role="tab" aria-selected="false">
+                            <i class="fas fa-times-circle me-2"></i>Tours No Disponibles
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <!-- Search Bar -->
+                <div class="mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control" id="tourSearchInput" placeholder="Buscar tours por título, categoría o descripción...">
+                    </div>
+                </div>
+                <!-- Tab Content -->
+                <div class="tab-content" id="tourTabsContent">
+                    <!-- Available Tours -->
+                    <div class="tab-pane fade show active" id="availableTours" role="tabpanel">
+                        <!-- Loading -->
+                        <div id="loadingSpinner" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <p class="mt-3">Cargando tours...</p>
+                        </div>
+                        
+                        <!-- No Results -->
+                        <div id="noAvailableResults" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h4>No hay tours disponibles</h4>
+                            <p class="text-muted">Agrega un nuevo tour o activa uno existente</p>
+                        </div>
+                        
+                        <!-- Table -->
+                        <div id="availableToursContainer" style="display: none;">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Imagen</th>
+                                            <th>Tour</th>
+                                            <th>Categoría</th>
+                                            <th>Duración</th>
+                                            <th>Precio</th>
+                                            <th>Fecha</th>
+                                            <th>Capacidad</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="availableToursTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Unavailable Tours -->
+                    <div class="tab-pane fade" id="unavailableTours" role="tabpanel">
+                        <!-- No Results -->
+                        <div id="noUnavailableResults" class="text-center py-5" style="display: none;">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h4>No hay tours no disponibles</h4>
+                            <p class="text-muted">Todos los tours están activos</p>
+                        </div>
+                        
+                        <!-- Table -->
+                        <div id="unavailableToursContainer" style="display: none;">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Imagen</th>
+                                            <th>Tour</th>
+                                            <th>Categoría</th>
+                                            <th>Duración</th>
+                                            <th>Precio</th>
+                                            <th>Fecha</th>
+                                            <th>Capacidad</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="unavailableToursTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour Modal (Create/Edit) -->
+    <div class="modal fade" id="tourModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tourModalTitle">
+                        <i class="fas fa-plus-circle me-2"></i>Nuevo Tour
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="tourForm">
+                        <input type="hidden" id="tourId">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="tourTitle" class="form-label">Título *</label>
+                                <input type="text" class="form-control" id="tourTitle" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="tourCategory" class="form-label">Categoría *</label>
+                                <select class="form-select" id="tourCategory" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Aventura">Aventura</option>
+                                    <option value="Cultural">Cultural</option>
+                                    <option value="Playa">Playa</option>
+                                    <option value="Gastronómico">Gastronómico</option>
+                                    <option value="Ecológico">Ecológico</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tourDescription" class="form-label">Descripción *</label>
+                            <textarea class="form-control" id="tourDescription" rows="3" required></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="tourDuration" class="form-label">Duración *</label>
+                                <input type="text" class="form-control" id="tourDuration" 
+                                       placeholder="Ej: 3 días 2 noches" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="tourPrice" class="form-label">Precio ($) *</label>
+                                <input type="number" class="form-control" id="tourPrice" 
+                                       step="0.01" min="0" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tourAttractions" class="form-label">Atracciones (separadas por coma)</label>
+                            <input type="text" class="form-control" id="tourAttractions" 
+                                   placeholder="Ej: Playa, Montaña, Museo">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tourCapacity" class="form-label">Capacidad (Lugares disponibles)</label>
+                            <input type="number" class="form-control" id="tourCapacity" 
+                                   min="1" max="100" value="20" required>
+                            <div class="form-text">Número máximo de personas para este tour</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tourDate" class="form-label">Fecha del Tour</label>
+                            <input type="date" class="form-control" id="tourDate">
+                            <div class="form-text">Fecha en que se realizará el tour</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tourImage" class="form-label">Imagen del Tour</label>
+                            <input type="file" class="form-control" id="tourImage" 
+                                   accept="image/jpeg,image/jpg,image/png,image/gif,image/webp">
+                            <div class="form-text">Formatos aceptados: JPEG, JPG, PNG, GIF, WebP (Máximo 5MB)</div>
+                        </div>
+
+                        <div class="mb-3" id="imagePreviewContainer" style="display: none;">
+                            <label class="form-label">Vista Previa</label>
+                            <img id="imagePreview" src="" alt="Vista previa" class="img-fluid rounded" style="max-height: 200px;">
+                        </div>
+                        
+                        <input type="hidden" id="tourImageUrl">
+
+                        <div class="mb-3 form-check">
+                            <input class="form-check-input" type="checkbox" id="tourIsActive" checked>
+                            <label class="form-check-label" for="tourIsActive">
+                                Tour activo
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="saveTourBtn">
+                        <i class="fas fa-save me-2"></i>Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contacts Management -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-envelope me-2"></i>Mensajes de Contacto
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Mensaje</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contactsTableBody">
+                            <tr>
+                                <td colspan="6" class="text-center">Cargando mensajes...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal fade" id="passwordModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-key me-2"></i>Cambiar Contraseña
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="passwordForm">
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Contraseña Actual *</label>
+                            <input type="password" class="form-control" id="currentPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Nueva Contraseña *</label>
+                            <input type="password" class="form-control" id="newPassword" required minlength="6">
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar Contraseña *</label>
+                            <input type="password" class="form-control" id="confirmPassword" required minlength="6">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="savePasswordBtn">
+                        <i class="fas fa-save me-2"></i>Cambiar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Custom JS -->
+    <script src="js/admin.js"></script>
+</body>
+</html>
