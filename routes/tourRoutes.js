@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const tourController = require('../controllers/tourController');
 const { authenticateToken } = require('../middlewares/authMiddleware');
-const upload = require('../server').upload;
+const upload = require('../config/upload');
 
 // Rutas públicas (no requieren autenticación)
 router.get('/', tourController.getAllTours);

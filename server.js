@@ -11,7 +11,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
-const multer = require('multer');
 const { testConnection, pool } = require('./config/db');
 const cloudinary = require('cloudinary').v2;
 
@@ -69,28 +68,6 @@ const limiter = rateLimit({
 
 // Aplicar rate limiting a todas las rutas
 app.use('/api/', limiter);
-
-// Configuración de Multer para carga de imágenes (usando memoria para Cloudinary)
-const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB límite
-    },
-    fileFilter: function (req, file, cb) {
-        const allowedTypes = /jpeg|jpg|png|gif|webp/;
-        const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = allowedTypes.test(file.mimetype);
-        
-        if (extname && mimetype) {
-            return cb(null, true);
-        } else {
-            cb(new Error('Solo se permiten imágenes (jpeg, jpg, png, gif, webp)'));
-        }
-    }
-});
-
-// Exportar upload para usar en rutas
-module.exports.upload = upload;
 
 // Rate limiting más estricto para login
 const loginLimiter = rateLimit({
