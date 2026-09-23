@@ -221,22 +221,6 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-// Ruta para subir imágenes
-app.post('/api/upload', upload.single('image'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({
-            success: false,
-            message: 'No se proporcionó ninguna imagen'
-        });
-    }
-    
-    res.json({
-        success: true,
-        message: 'Imagen subida exitosamente',
-        imageUrl: `/uploads/${req.file.filename}`
-    });
-});
-
 // Montar rutas de la API
 app.use('/api/auth', authRoutes);
 app.use('/api/tours', tourRoutes);
