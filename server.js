@@ -108,7 +108,7 @@ app.get('/api/migrate', async (req, res) => {
 });
 
 // Endpoint para limpiar URLs de imágenes locales
-app.post('/api/cleanup-local-images', async (req, res) => {
+app.get('/api/cleanup-local-images', async (req, res) => {
     try {
         console.log('🧹 Limpiando URLs de imágenes locales...');
         
