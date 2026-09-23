@@ -9,6 +9,7 @@ let currentTourId = null;
 // Modales
 let tourModal = null;
 let passwordModal = null;
+let tourImagesModal = null;
 
 // Subir imágenes adicionales a un tour
 async function uploadAdditionalImages(tourId, files) {
@@ -41,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     tourModal = new bootstrap.Modal(document.getElementById('tourModal'));
     passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+    tourImagesModal = new bootstrap.Modal(document.getElementById('tourImagesModal'));
     setupEventListeners();
 });
 
@@ -109,6 +111,9 @@ function setupEventListeners() {
     
     // Botón logout
     document.getElementById('logoutBtn').addEventListener('click', logout);
+    
+    // Botón agregar imágenes
+    document.getElementById('addImagesBtn').addEventListener('click', addNewTourImages);
 }
 
 // Cargar estadísticas
@@ -272,6 +277,9 @@ function renderTourRow(tour) {
             <td>
                 <button onclick="editTour(${tour.id})" class="btn btn-sm btn-primary me-1">
                     <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="manageTourImages(${tour.id})" class="btn btn-sm btn-info me-1" title="Gestionar imágenes">
+                    <i class="fas fa-images"></i>
                 </button>
                 <button onclick="deleteTour(${tour.id})" class="btn btn-sm btn-danger">
                     <i class="fas fa-trash"></i>
@@ -533,26 +541,21 @@ async function toggleTourStatus(id, event) {
 }
 
 // Eliminar tour
-async function deleteTour(id) {
+async function deleteTour(tourId) {
     const result = await Swal.fire({
         title: '¿Estás seguro?',
-        text: 'Esta acción eliminará permanentemente el tour. ¿Deseas continuar?',
+        text: 'Esta acción no se puede deshacer',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#dc3545',
-        cancelButtonColor: '#6c757d',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar'
     });
     
-    if (!result.isConfirmed) {
-        return;
-    }
-    
-    try {
+    if (result.isConfirmed) {
         const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
-        
-        const response = await fetch(`${API_URL}/tours/${id}`, {
+        const response = await fetch(`${API_URL}/tours/${tourId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -564,25 +567,125 @@ async function deleteTour(id) {
         if (data.success) {
             await Swal.fire({
                 icon: 'success',
-                title: '¡Eliminado!',
-                text: 'El tour ha sido eliminado permanentemente',
+                title: 'Eliminado',
+                text: 'Tour eliminado correctamente',
                 timer: 1500,
                 timerProgressBar: true,
                 showConfirmButton: false
             });
-            
             loadTours();
             loadStats();
         } else {
             throw new Error(data.message || 'Error al eliminar el tour');
         }
+    }
+}
+
+// Gestionar imágenes de un tour
+async function manageTourImages(tourId) {
+    document.getElementById('currentTourIdForImages').value = tourId;
+    await loadTourImagesForAdmin(tourId);
+    tourImagesModal.show();
+}
+
+// Cargar imágenes de un tour para el admin
+async function loadTourImagesForAdmin(tourId) {
+    try {
+        const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+        const response = await fetch(`${API_URL}/tours/${tourId}/images`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        
+        const imagesContainer = document.getElementById('currentTourImages');
+        
+        if (data.success && data.data.length > 0) {
+            imagesContainer.innerHTML = data.data.map(img => `
+                <div class="position-relative">
+                    <img src="${img.image_url}" alt="Imagen" 
+                         class="rounded" style="width: 100px; height: 100px; object-fit: cover;">
+                    <button onclick="deleteTourImage(${img.id})" 
+                            class="btn btn-danger btn-sm position-absolute top-0 end-0"
+                            style="width: 25px; height: 25px; padding: 0;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
+        } else {
+            imagesContainer.innerHTML = '<p class="text-muted">No hay imágenes adicionales</p>';
+        }
     } catch (error) {
-        console.error('Error eliminando tour:', error);
-        Swal.fire({
+        console.error('Error al cargar imágenes:', error);
+        document.getElementById('currentTourImages').innerHTML = '<p class="text-danger">Error al cargar imágenes</p>';
+    }
+}
+
+// Eliminar imagen de un tour
+async function deleteTourImage(imageId) {
+    const result = await Swal.fire({
+        title: '¿Eliminar imagen?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    });
+    
+    if (result.isConfirmed) {
+        const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+        const response = await fetch(`${API_URL}/tours/images/${imageId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            const tourId = document.getElementById('currentTourIdForImages').value;
+            await loadTourImagesForAdmin(tourId);
+        } else {
+            throw new Error(data.message || 'Error al eliminar la imagen');
+        }
+    }
+}
+
+// Agregar nuevas imágenes a un tour
+async function addNewTourImages() {
+    const tourId = document.getElementById('currentTourIdForImages').value;
+    const imagesInput = document.getElementById('newTourImages');
+    
+    if (!imagesInput.files || imagesInput.files.length === 0) {
+        await Swal.fire({
+            icon: 'warning',
+            title: 'Advertencia',
+            text: 'Por favor selecciona al menos una imagen'
+        });
+        return;
+    }
+    
+    try {
+        await uploadAdditionalImages(tourId, imagesInput.files);
+        await loadTourImagesForAdmin(tourId);
+        imagesInput.value = '';
+        
+        await Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Imágenes agregadas correctamente',
+            timer: 1500,
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+    } catch (error) {
+        await Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: error.message,
-            confirmButtonColor: '#dc3545'
+            text: error.message || 'Error al agregar las imágenes'
         });
     }
 }
