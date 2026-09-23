@@ -379,6 +379,7 @@ async function saveTour() {
     const form = document.getElementById('tourForm');
     
     console.log('Form:', form);
+    console.log('currentTourId:', currentTourId);
     
     if (!form.checkValidity()) {
         console.log('Form validation failed');
@@ -391,48 +392,38 @@ async function saveTour() {
     const imageFile = document.getElementById('tourImage').files[0];
     const currentImageUrl = document.getElementById('tourImageUrl').value;
     
+    console.log('imageFile:', imageFile);
+    console.log('currentImageUrl:', currentImageUrl);
+    
     const saveBtn = document.getElementById('saveTourBtn');
     saveBtn.disabled = true;
     saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
     
     try {
         const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
-        let imageUrl = currentImageUrl;
+        console.log('Token:', token ? 'exists' : 'missing');
         
-        // Si hay una nueva imagen, subirla primero
+        // Crear FormData con todos los campos del tour
+        const formData = new FormData();
+        formData.append('title', document.getElementById('tourTitle').value);
+        formData.append('category', document.getElementById('tourCategory').value);
+        formData.append('description', document.getElementById('tourDescription').value);
+        formData.append('duration', document.getElementById('tourDuration').value);
+        formData.append('price', document.getElementById('tourPrice').value);
+        formData.append('attractions', document.getElementById('tourAttractions').value);
+        formData.append('capacity', document.getElementById('tourCapacity').value);
+        formData.append('tour_date', document.getElementById('tourDate').value);
+        formData.append('is_active', document.getElementById('tourIsActive').checked);
+        
+        // Si hay una nueva imagen, agregarla al FormData
         if (imageFile) {
-            const formData = new FormData();
+            console.log('Adding image file to FormData');
             formData.append('image', imageFile);
-            
-            const uploadResponse = await fetch(`${API_URL}/upload`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            });
-            
-            const uploadData = await uploadResponse.json();
-            
-            if (!uploadData.success) {
-                throw new Error(uploadData.message || 'Error al subir la imagen');
-            }
-            
-            imageUrl = uploadData.imageUrl;
+        } else if (currentImageUrl) {
+            // Si no hay nueva imagen pero hay una URL existente, enviarla
+            console.log('Adding image URL to FormData');
+            formData.append('image_url', currentImageUrl);
         }
-        
-        const tourData = {
-            title: document.getElementById('tourTitle').value,
-            category: document.getElementById('tourCategory').value,
-            description: document.getElementById('tourDescription').value,
-            duration: document.getElementById('tourDuration').value,
-            price: parseFloat(document.getElementById('tourPrice').value),
-            attractions: document.getElementById('tourAttractions').value.split(',').map(a => a.trim()).filter(a => a),
-            image_url: imageUrl || null,
-            capacity: parseInt(document.getElementById('tourCapacity').value) || 20,
-            tour_date: document.getElementById('tourDate').value || null,
-            is_active: document.getElementById('tourIsActive').checked
-        };
         
         let url = `${API_URL}/tours`;
         let method = 'POST';
@@ -442,16 +433,20 @@ async function saveTour() {
             method = 'PUT';
         }
         
+        console.log('Request URL:', url);
+        console.log('Request method:', method);
+        
         const response = await fetch(url, {
             method: method,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(tourData)
+            body: formData
         });
         
+        console.log('Response status:', response.status);
         const data = await response.json();
+        console.log('Response data:', data);
         
         if (data.success) {
             // Si hay imágenes adicionales, subirlas después de crear/actualizar el tour
