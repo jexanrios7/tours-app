@@ -212,6 +212,9 @@ const updateTour = async (req, res) => {
         if (req.file) {
             finalImageUrl = await uploadImageToCloudinary(req.file);
         }
+        if (finalImageUrl === '') {
+            finalImageUrl = null;
+        }
         
         // Convertir attractions a array si es string
         const attractionsArray = Array.isArray(attractions) ? attractions : 
@@ -246,7 +249,7 @@ const updateTour = async (req, res) => {
             paramCount++;
         }
         
-        if (price !== undefined && price !== null) {
+        if (price !== undefined && price !== null && price !== '') {
             updates.push(`price = $${paramCount}`);
             values.push(price);
             paramCount++;
@@ -266,11 +269,11 @@ const updateTour = async (req, res) => {
         
         if (is_active !== undefined) {
             updates.push(`is_active = $${paramCount}`);
-            values.push(is_active);
+            values.push(is_active === true || is_active === 'true');
             paramCount++;
         }
         
-        if (capacity !== undefined && capacity !== null) {
+        if (capacity !== undefined && capacity !== null && capacity !== '') {
             updates.push(`capacity = $${paramCount}`);
             values.push(capacity);
             paramCount++;
@@ -278,7 +281,7 @@ const updateTour = async (req, res) => {
         
         if (tour_date !== undefined) {
             updates.push(`tour_date = $${paramCount}`);
-            values.push(tour_date);
+            values.push(tour_date === '' ? null : tour_date);
             paramCount++;
         }
         
