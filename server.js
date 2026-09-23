@@ -28,8 +28,8 @@ const contactRoutes = require('./routes/contactRoutes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Trust proxy para Render
-app.set('trust proxy', true);
+// Trust proxy para Render - configuración más específica
+app.set('trust proxy', 1);
 
 // Middleware de seguridad
 app.use(helmet({
@@ -63,7 +63,11 @@ const limiter = rateLimit({
         message: 'Demasiadas solicitudes desde esta IP, intenta más tarde.'
     },
     standardHeaders: true,
-    legacyHeaders: false
+    legacyHeaders: false,
+    skip: (req) => {
+        // Omitir rate limiting en desarrollo
+        return process.env.NODE_ENV === 'development';
+    }
 });
 
 // Aplicar rate limiting a todas las rutas
@@ -76,6 +80,10 @@ const loginLimiter = rateLimit({
     message: {
         success: false,
         message: 'Demasiados intentos de login. Intenta más tarde.'
+    },
+    skip: (req) => {
+        // Omitir rate limiting en desarrollo
+        return process.env.NODE_ENV === 'development';
     }
 });
 
