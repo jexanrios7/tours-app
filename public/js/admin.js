@@ -244,7 +244,9 @@ function renderTourRow(tour) {
     const hasCapacity = tour.capacity > 0;
     const isAvailable = tour.is_active && isDateValid && hasCapacity;
     
-    const formattedDate = tour.tour_date ? new Date(tour.tour_date).toLocaleDateString('es-MX') : 'No especificada';
+    const formattedDate = tour.tour_date
+        ? String(tour.tour_date).slice(0, 10).split('-').reverse().join('/')
+        : 'No especificada';
     
     return `
         <tr>
@@ -320,7 +322,7 @@ function openTourModal(tour = null) {
         document.getElementById('tourAttractions').value = tour.attractions ? tour.attractions.join(', ') : '';
         document.getElementById('tourImageUrl').value = tour.image_url || '';
         document.getElementById('tourCapacity').value = tour.capacity || 20;
-        document.getElementById('tourDate').value = tour.tour_date || '';
+        document.getElementById('tourDate').value = tour.tour_date ? String(tour.tour_date).slice(0, 10) : '';
         document.getElementById('tourIsActive').checked = tour.is_active;
     } else {
         // Crear nuevo tour
