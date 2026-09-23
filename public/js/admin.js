@@ -5,6 +5,7 @@ const API_URL = '/api';
 let allTours = [];
 let allContacts = [];
 let currentTourId = null;
+let imageLoadTimeout = null;
 
 // Modales
 let tourModal = null;
@@ -583,9 +584,18 @@ async function deleteTour(tourId) {
 
 // Gestionar imágenes de un tour
 async function manageTourImages(tourId) {
+    // Cancelar cualquier carga de imágenes pendiente
+    if (imageLoadTimeout) {
+        clearTimeout(imageLoadTimeout);
+    }
+    
     document.getElementById('currentTourIdForImages').value = tourId;
-    await loadTourImagesForAdmin(tourId);
-    tourImagesModal.show();
+    
+    // Usar debounce para evitar múltiples solicitudes
+    imageLoadTimeout = setTimeout(async () => {
+        await loadTourImagesForAdmin(tourId);
+        tourImagesModal.show();
+    }, 100);
 }
 
 // Cargar imágenes de un tour para el admin
