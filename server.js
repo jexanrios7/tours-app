@@ -297,11 +297,19 @@ const runMigrations = async () => {
                 email VARCHAR(100) UNIQUE NOT NULL,
                 full_name VARCHAR(100),
                 is_active BOOLEAN DEFAULT true,
+                last_login TIMESTAMP,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
         console.log('✅ Tabla admins creada o ya existe');
+
+        // Agregar columna last_login a admins si no existe
+        await pool.query(`
+            ALTER TABLE admins 
+            ADD COLUMN IF NOT EXISTS last_login TIMESTAMP
+        `);
+        console.log('✅ Migración de admins.last_login ejecutada');
 
         // Crear tabla tours si no existe
         console.log('📝 Creando tabla tours...');
