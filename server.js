@@ -170,6 +170,36 @@ app.get('/api/check-tables', async (req, res) => {
     }
 });
 
+// Endpoint para verificar si el admin existe
+app.get('/api/check-admin', async (req, res) => {
+    try {
+        const adminCheck = await pool.query('SELECT id, username, email FROM admins WHERE username = $1', ['admin']);
+        
+        if (adminCheck.rows.length > 0) {
+            res.json({
+                success: true,
+                adminExists: true,
+                admin: {
+                    id: adminCheck.rows[0].id,
+                    username: adminCheck.rows[0].username,
+                    email: adminCheck.rows[0].email
+                }
+            });
+        } else {
+            res.json({
+                success: true,
+                adminExists: false
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error al verificar admin',
+            error: error.message
+        });
+    }
+});
+
 // Ruta principal - servir index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
