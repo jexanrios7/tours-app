@@ -313,10 +313,18 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="tourImage" class="form-label">Imagen del Tour</label>
+                            <label for="tourImage" class="form-label">Imagen Principal del Tour</label>
                             <input type="file" class="form-control" id="tourImage" 
                                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp">
                             <div class="form-text">Formatos aceptados: JPEG, JPG, PNG, GIF, WebP (Máximo 5MB)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tourAdditionalImages" class="form-label">Imágenes Adicionales (Opcional)</label>
+                            <input type="file" class="form-control" id="tourAdditionalImages" 
+                                   accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" multiple>
+                            <div class="form-text">Puedes seleccionar hasta 10 imágenes adicionales (Máximo 5MB cada una)</div>
+                        </div>
                         </div>
 
                         <div class="mb-3" id="imagePreviewContainer" style="display: none;">

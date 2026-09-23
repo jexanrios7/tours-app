@@ -156,7 +156,7 @@ function filterTours() {
 }
 
 // Mostrar detalles del tour en modal
-function showTourDetail(index) {
+async function showTourDetail(index) {
     const tour = allTours[index];
     currentTourIndex = index;
     
@@ -167,6 +167,9 @@ function showTourDetail(index) {
     document.getElementById('tourDetailPrice').textContent = `$${parseFloat(tour.price).toFixed(2)} MXN`;
     document.getElementById('tourDetailDescription').textContent = tour.description;
     
+    // Cargar imágenes adicionales del tour
+    await loadTourImages(tour.id);
+    
     // Mostrar atracciones
     const attractionsContainer = document.getElementById('tourDetailAttractions');
     if (tour.attractions && tour.attractions.length > 0) {
@@ -174,21 +177,11 @@ function showTourDetail(index) {
             `<span class="badge bg-light text-dark me-2 mb-2">${attr}</span>`
         ).join('');
     } else {
-        attractionsContainer.innerHTML = '<span class="text-muted">No especificadas</span>';
+        attractionsContainer.innerHTML = '<span class="text-muted">No hay atracciones especificadas</span>';
     }
     
     // Mostrar capacidad
-    const capacityContainer = document.getElementById('tourDetailCapacity');
-    if (capacityContainer) {
-        capacityContainer.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center">
-                <span class="text-muted">
-                    <i class="fas fa-users me-2"></i>Lugares disponibles
-                </span>
-                <span class="badge bg-info fs-6">${tour.capacity || 20}</span>
-            </div>
-        `;
-    }
+    document.getElementById('tourDetailCapacity').textContent = tour.capacity ? `${tour.capacity} lugares disponibles` : 'No especificado';
     
     // Mostrar fecha del tour
     const dateContainer = document.getElementById('tourDetailDate');
@@ -209,6 +202,42 @@ function showTourDetail(index) {
     };
     
     tourDetailModal.show();
+}
+
+// Cargar imágenes adicionales de un tour
+async function loadTourImages(tourId) {
+    try {
+        const response = await fetch(`/api/tours/${tourId}/images`);
+        const data = await response.json();
+        
+        const galleryContainer = document.getElementById('tourDetailGallery');
+        const galleryImages = document.getElementById('tourDetailGalleryImages');
+        
+        if (data.success && data.data.length > 0) {
+            galleryContainer.style.display = 'block';
+            galleryImages.innerHTML = data.data.map(img => 
+                `<img src="${img.image_url}" alt="Imagen adicional" 
+                      class="rounded" style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                      onclick="changeMainImage('${img.image_url}')">`
+            ).join('');
+        } else {
+            galleryContainer.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error al cargar imágenes:', error);
+        document.getElementById('tourDetailGallery').style.display = 'none';
+    }
+}
+
+// Cambiar imagen principal al hacer clic en una de la galería
+function changeMainImage(imageUrl) {
+    document.getElementById('tourDetailImage').src = imageUrl;
+}
+
+// Mostrar/ocultar galería de imágenes
+function showImageGallery() {
+    const gallery = document.getElementById('tourDetailGallery');
+    gallery.style.display = gallery.style.display === 'none' ? 'block' : 'none';
 }
 
 // Reservar por WhatsApp

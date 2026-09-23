@@ -332,6 +332,19 @@ const runMigrations = async () => {
         `);
         console.log('✅ Migración de contacts.is_read ejecutada');
 
+        // Crear tabla tour_images si no existe
+        console.log('📝 Creando tabla tour_images...');
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS tour_images (
+                id SERIAL PRIMARY KEY,
+                tour_id INTEGER NOT NULL REFERENCES tours(id) ON DELETE CASCADE,
+                image_url TEXT NOT NULL,
+                display_order INTEGER DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('✅ Tabla tour_images creada o ya existe');
+
         // Insertar admin por defecto si no existe
         console.log('📝 Verificando admin por defecto...');
         const adminExists = await pool.query('SELECT id FROM admins WHERE username = $1', ['admin']);

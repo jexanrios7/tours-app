@@ -9,10 +9,13 @@ router.get('/', tourController.getAllTours);
 router.get('/active', tourController.getActiveTours);
 router.get('/stats', authenticateToken, tourController.getTourStats);
 router.get('/:id', tourController.getTourById);
+router.get('/:id/images', tourController.getTourImages);
 
 // Rutas protegidas (requieren autenticación de admin)
 router.post('/', authenticateToken, upload.single('image'), tourController.createTour);
+router.post('/:id/images', authenticateToken, upload.array('images', 10), tourController.addTourImages);
 router.put('/:id', authenticateToken, upload.single('image'), tourController.updateTour);
 router.delete('/:id', authenticateToken, tourController.deleteTour);
+router.delete('/images/:id', authenticateToken, tourController.deleteTourImage);
 
 module.exports = router;

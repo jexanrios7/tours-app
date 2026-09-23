@@ -10,6 +10,32 @@ let currentTourId = null;
 let tourModal = null;
 let passwordModal = null;
 
+// Subir imágenes adicionales a un tour
+async function uploadAdditionalImages(tourId, files) {
+    const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
+    const formData = new FormData();
+    
+    for (let i = 0; i < files.length; i++) {
+        formData.append('images', files[i]);
+    }
+    
+    const response = await fetch(`${API_URL}/tours/${tourId}/images`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: formData
+    });
+    
+    const data = await response.json();
+    
+    if (!data.success) {
+        throw new Error(data.message || 'Error al subir imágenes adicionales');
+    }
+    
+    return data;
+}
+
 // Verificar autenticación al cargar
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
@@ -413,6 +439,13 @@ async function saveTour() {
         const data = await response.json();
         
         if (data.success) {
+            // Si hay imágenes adicionales, subirlas después de crear/actualizar el tour
+            const additionalImagesInput = document.getElementById('tourAdditionalImages');
+            if (additionalImagesInput.files.length > 0) {
+                const tourId = currentTourId || data.data.id;
+                await uploadAdditionalImages(tourId, additionalImagesInput.files);
+            }
+            
             await Swal.fire({
                 icon: 'success',
                 title: '¡Éxito!',

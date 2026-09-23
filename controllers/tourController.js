@@ -25,6 +25,20 @@ const uploadImageToCloudinary = async (file) => {
     }
 };
 
+// Helper para subir múltiples imágenes a Cloudinary
+const uploadMultipleImagesToCloudinary = async (files) => {
+    try {
+        if (!files || files.length === 0) return [];
+        
+        const uploadPromises = files.map(file => uploadImageToCloudinary(file));
+        const urls = await Promise.all(uploadPromises);
+        return urls.filter(url => url !== null);
+    } catch (error) {
+        console.error('Error al subir imágenes a Cloudinary:', error);
+        throw new Error('Error al subir las imágenes');
+    }
+};
+
 // Obtener todos los tours (para admin)
 const getAllTours = async (req, res) => {
     try {
@@ -121,10 +135,16 @@ const createTour = async (req, res) => {
             });
         }
         
-        // Subir imagen a Cloudinary si se proporcionó un archivo
+        // Subir imagen principal a Cloudinary si se proporcionó un archivo
         let finalImageUrl = image_url || null;
         if (req.file) {
             finalImageUrl = await uploadImageToCloudinary(req.file);
+        }
+        
+        // Subir imágenes adicionales si se proporcionaron
+        let additionalImages = [];
+        if (req.files && req.files.length > 0) {
+            additionalImages = await uploadMultipleImagesToCloudinary(req.files);
         }
         
         // Convertir attractions a array si es string
@@ -150,11 +170,22 @@ const createTour = async (req, res) => {
         ];
         
         const result = await pool.query(query, values);
+        const tour = result.rows[0];
+        
+        // Insertar imágenes adicionales en tour_images
+        if (additionalImages.length > 0) {
+            for (let i = 0; i < additionalImages.length; i++) {
+                await pool.query(
+                    'INSERT INTO tour_images (tour_id, image_url, display_order) VALUES ($1, $2, $3)',
+                    [tour.id, additionalImages[i], i]
+                );
+            }
+        }
         
         res.status(201).json({
             success: true,
             message: 'Tour creado exitosamente',
-            data: result.rows[0]
+            data: tour
         });
     } catch (error) {
         console.error('Error al crear tour:', error);
@@ -361,6 +392,106 @@ const getTourStats = async (req, res) => {
     }
 };
 
+// Obtener imágenes de un tour
+const getTourImages = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const query = `
+            SELECT id, image_url, display_order, created_at
+            FROM tour_images
+            WHERE tour_id = $1
+            ORDER BY display_order ASC, created_at ASC
+        `;
+        
+        const result = await pool.query(query, [id]);
+        
+        res.json({
+            success: true,
+            data: result.rows
+        });
+    } catch (error) {
+        console.error('Error al obtener imágenes del tour:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener las imágenes del tour'
+        });
+    }
+};
+
+// Agregar imágenes a un tour
+const addTourImages = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'No se proporcionaron imágenes'
+            });
+        }
+        
+        const uploadedImages = await uploadMultipleImagesToCloudinary(req.files);
+        
+        // Obtener el display_order máximo actual
+        const maxOrderResult = await pool.query(
+            'SELECT COALESCE(MAX(display_order), -1) as max_order FROM tour_images WHERE tour_id = $1',
+            [id]
+        );
+        const maxOrder = maxOrderResult.rows[0].max_order;
+        
+        // Insertar las nuevas imágenes
+        for (let i = 0; i < uploadedImages.length; i++) {
+            await pool.query(
+                'INSERT INTO tour_images (tour_id, image_url, display_order) VALUES ($1, $2, $3)',
+                [id, uploadedImages[i], maxOrder + i + 1]
+            );
+        }
+        
+        res.json({
+            success: true,
+            message: 'Imágenes agregadas exitosamente',
+            count: uploadedImages.length
+        });
+    } catch (error) {
+        console.error('Error al agregar imágenes al tour:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al agregar las imágenes'
+        });
+    }
+};
+
+// Eliminar una imagen de un tour
+const deleteTourImage = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const result = await pool.query(
+            'DELETE FROM tour_images WHERE id = $1 RETURNING *',
+            [id]
+        );
+        
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Imagen no encontrada'
+            });
+        }
+        
+        res.json({
+            success: true,
+            message: 'Imagen eliminada exitosamente'
+        });
+    } catch (error) {
+        console.error('Error al eliminar imagen:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al eliminar la imagen'
+        });
+    }
+};
+
 module.exports = {
     getAllTours,
     getActiveTours,
@@ -368,5 +499,8 @@ module.exports = {
     createTour,
     updateTour,
     deleteTour,
-    getTourStats
+    getTourStats,
+    getTourImages,
+    addTourImages,
+    deleteTourImage
 };
