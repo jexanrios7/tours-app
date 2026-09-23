@@ -64,10 +64,10 @@ function renderTours(tours) {
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 tour-card shadow-sm">
                 <div class="card-img-top-wrapper" style="cursor: pointer;" onclick="showTourDetail(${index})">
-                    <img src="${tour.image_url || 'https://via.placeholder.com/400x300?text=Tour'}" 
+                    <img src="${tour.image_url || 'https://placehold.co/400x300?text=Tour'}" 
                          alt="${tour.title}" 
                          class="card-img-top"
-                         onerror="this.src='https://via.placeholder.com/400x300?text=Tour'">
+                         onerror="this.src='https://placehold.co/400x300?text=Tour'">
                     <span class="badge bg-primary category-badge">${tour.category}</span>
                 </div>
                 <div class="card-body">
@@ -161,7 +161,7 @@ function showTourDetail(index) {
     currentTourIndex = index;
     
     document.getElementById('tourDetailTitle').textContent = tour.title;
-    document.getElementById('tourDetailImage').src = tour.image_url || 'https://via.placeholder.com/400x300?text=Tour';
+    document.getElementById('tourDetailImage').src = tour.image_url || 'https://placehold.co/400x300?text=Tour';
     document.getElementById('tourDetailCategory').textContent = tour.category;
     document.getElementById('tourDetailDuration').textContent = tour.duration;
     document.getElementById('tourDetailPrice').textContent = `$${parseFloat(tour.price).toFixed(2)} MXN`;

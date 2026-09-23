@@ -217,11 +217,11 @@ function renderTourRow(tour) {
     return `
         <tr>
             <td>
-                <img src="${tour.image_url || 'https://via.placeholder.com/50'}" 
+                <img src="${tour.image_url || 'https://placehold.co/50'}" 
                      alt="${tour.title}" 
                      class="rounded"
                      style="width: 50px; height: 50px; object-fit: cover;"
-                     onerror="this.src='https://via.placeholder.com/50'">
+                     onerror="this.src='https://placehold.co/50'">
             </td>
             <td>
                 <strong>${tour.title}</strong>
