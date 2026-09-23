@@ -12,7 +12,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
 const multer = require('multer');
-const { testConnection } = require('./config/db');
+const { testConnection, pool } = require('./config/db');
 
 const tourRoutes = require('./routes/tourRoutes');
 const authRoutes = require('./routes/authRoutes');
