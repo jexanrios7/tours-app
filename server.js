@@ -14,6 +14,9 @@ const contactRoutes = require('./routes/contactRoutes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust proxy para Render
+app.set('trust proxy', true);
+
 // Middleware de seguridad
 app.use(helmet({
     contentSecurityPolicy: {
@@ -186,10 +189,13 @@ const startServer = async () => {
 };
 
 testConnection().then(async success => {
+    console.log('🔍 Conexión a base de datos:', success);
     if (success) {
         // Ejecutar migraciones necesarias
+        console.log('🚀 Iniciando migraciones...');
         try {
             // Crear tabla admins si no existe
+            console.log('📝 Creando tabla admins...');
             await pool.query(`
                 CREATE TABLE IF NOT EXISTS admins (
                     id SERIAL PRIMARY KEY,
@@ -205,6 +211,7 @@ testConnection().then(async success => {
             console.log('✅ Tabla admins creada o ya existe');
 
             // Crear tabla tours si no existe
+            console.log('📝 Creando tabla tours...');
             await pool.query(`
                 CREATE TABLE IF NOT EXISTS tours (
                     id SERIAL PRIMARY KEY,
@@ -225,6 +232,7 @@ testConnection().then(async success => {
             console.log('✅ Tabla tours creada o ya existe');
 
             // Crear tabla contacts si no existe
+            console.log('📝 Creando tabla contacts...');
             await pool.query(`
                 CREATE TABLE IF NOT EXISTS contacts (
                     id SERIAL PRIMARY KEY,
@@ -246,6 +254,7 @@ testConnection().then(async success => {
             console.log('✅ Migración de contacts.is_read ejecutada');
 
             // Insertar admin por defecto si no existe
+            console.log('📝 Verificando admin por defecto...');
             const adminExists = await pool.query('SELECT id FROM admins WHERE username = $1', ['admin']);
             if (adminExists.rows.length === 0) {
                 const bcrypt = require('bcrypt');
@@ -258,8 +267,10 @@ testConnection().then(async success => {
             } else {
                 console.log('ℹ️  Admin por defecto ya existe');
             }
+            console.log('✅ Migraciones completadas exitosamente');
         } catch (error) {
             console.error('❌ Error en migraciones:', error);
+            console.error('Error details:', error.message);
         }
         
         startServer();
