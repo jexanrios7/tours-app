@@ -129,7 +129,7 @@ const getTourById = async (req, res) => {
 // Crear un nuevo tour (solo admin)
 const createTour = async (req, res) => {
     try {
-        const { title, description, attractions, duration, price, category, image_url, capacity, tour_date } = req.body;
+        const { title, description, attractions, duration, price, category, image_url, capacity, tour_date, is_active } = req.body;
         
         // Validaciones básicas
         if (!title || !description || !duration || !price || !category) {
@@ -157,7 +157,7 @@ const createTour = async (req, res) => {
         
         const query = `
             INSERT INTO tours (title, description, attractions, duration, price, category, image_url, capacity, tour_date, is_active)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             RETURNING *
         `;
         
@@ -170,7 +170,8 @@ const createTour = async (req, res) => {
             category,
             finalImageUrl,
             capacity || 20,
-            tour_date || null
+            tour_date || null,
+            is_active === undefined ? true : (is_active === true || is_active === 'true')
         ];
         
         const result = await pool.query(query, values);
