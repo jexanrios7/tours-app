@@ -22,7 +22,7 @@ app.use(helmet({
             styleSrc: ["'self'", "'unsafe-inline'", "'unsafe-hashes'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com"],
             scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-hashes'", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"],
             scriptSrcAttr: ["'unsafe-inline'", "'unsafe-hashes'"],
-            imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://source.unsplash.com"],
+            imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://source.unsplash.com", "https://media.giphy.com", "https://*.giphy.com"],
             connectSrc: ["'self'", "https://cdn.jsdelivr.net"],
             fontSrc: ["'self'", "https://cdnjs.cloudflare.com", "https://fonts.gstatic.com", "https://fonts.googleapis.com"],
         }
