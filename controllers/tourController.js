@@ -6,19 +6,23 @@ const uploadImageToCloudinary = async (file) => {
     try {
         if (!file) return null;
         
-        const result = await cloudinary.uploader.upload_stream(
-            {
-                folder: 'tours-app',
-                allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
-                max_file_size: 5000000 // 5MB
-            },
-            (error, result) => {
-                if (error) throw error;
-                return result;
-            }
-        ).end(file.buffer);
-        
-        return result.secure_url;
+        return new Promise((resolve, reject) => {
+            cloudinary.uploader.upload_stream(
+                {
+                    folder: 'tours-app',
+                    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+                    max_file_size: 5000000 // 5MB
+                },
+                (error, result) => {
+                    if (error) {
+                        console.error('Error en upload_stream:', error);
+                        reject(error);
+                    } else {
+                        resolve(result.secure_url);
+                    }
+                }
+            ).end(file.buffer);
+        });
     } catch (error) {
         console.error('Error al subir imagen a Cloudinary:', error);
         throw new Error('Error al subir la imagen');
