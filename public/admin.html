@@ -241,6 +241,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- Contacts Management -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-envelope me-2"></i>Mensajes de Contacto
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Mensaje</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contactsTableBody">
+                            <tr>
+                                <td colspan="6" class="text-center">Cargando mensajes...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Tour Modal (Create/Edit) -->
@@ -325,7 +355,6 @@
                                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" multiple>
                             <div class="form-text">Puedes seleccionar hasta 10 imágenes adicionales (Máximo 5MB cada una)</div>
                         </div>
-                        </div>
 
                         <div class="mb-3" id="imagePreviewContainer" style="display: none;">
                             <label class="form-label">Vista Previa</label>
@@ -352,70 +381,40 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Tour Images Management Modal -->
-        <div class="modal fade" id="tourImagesModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Gestionar Imágenes del Tour</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" id="currentTourIdForImages">
-                        
-                        <div class="mb-4">
-                            <h6>Imágenes Actuales</h6>
-                            <div id="currentTourImages" class="d-flex flex-wrap gap-2 mb-3">
-                                <p class="text-muted">Cargando imágenes...</p>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <h6>Agregar Nuevas Imágenes</h6>
-                            <input type="file" class="form-control" id="newTourImages" 
-                                   accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" multiple>
-                            <div class="form-text">Puedes seleccionar hasta 10 imágenes (Máximo 5MB cada una)</div>
+    <!-- Tour Images Management Modal -->
+    <div class="modal fade" id="tourImagesModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Gestionar Imágenes del Tour</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="currentTourIdForImages">
+
+                    <div class="mb-4">
+                        <h6>Imágenes Actuales</h6>
+                        <div id="currentTourImages" class="d-flex flex-wrap gap-2 mb-3">
+                            <p class="text-muted">Cargando imágenes...</p>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Cerrar
-                        </button>
-                        <button type="button" class="btn btn-primary" id="addImagesBtn">
-                            <i class="fas fa-plus me-2"></i>Agregar Imágenes
-                        </button>
+
+                    <div class="mb-4">
+                        <h6>Agregar Nuevas Imágenes</h6>
+                        <input type="file" class="form-control" id="newTourImages" 
+                               accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" multiple>
+                        <div class="form-text">Puedes seleccionar hasta 10 imágenes (Máximo 5MB cada una)</div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Contacts Management -->
-        <div class="card shadow-sm mt-4">
-            <div class="card-header bg-white">
-                <h5 class="mb-0">
-                    <i class="fas fa-envelope me-2"></i>Mensajes de Contacto
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Teléfono</th>
-                                <th>Mensaje</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="contactsTableBody">
-                            <tr>
-                                <td colspan="6" class="text-center">Cargando mensajes...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cerrar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="addImagesBtn">
+                        <i class="fas fa-plus me-2"></i>Agregar Imágenes
+                    </button>
                 </div>
             </div>
         </div>

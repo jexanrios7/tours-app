@@ -230,8 +230,6 @@ app.get('/admin', (req, res) => {
 });
 
 // Montar rutas de la API
-app.use('/api/auth', authRoutes);
-app.use('/api/tours', tourRoutes);
 app.use('/api/contacts', contactRoutes);
 
 // Manejo de rutas no encontradas (API)

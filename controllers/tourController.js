@@ -129,7 +129,7 @@ const getTourById = async (req, res) => {
 // Crear un nuevo tour (solo admin)
 const createTour = async (req, res) => {
     try {
-        const { title, description, attractions, duration, price, category, image_url, capacity, tour_date } = req.body;
+        const { title, description, attractions, duration, price, category, image_url, capacity, tour_date, is_active } = req.body;
         
         // Validaciones básicas
         if (!title || !description || !duration || !price || !category) {
@@ -157,7 +157,7 @@ const createTour = async (req, res) => {
         
         const query = `
             INSERT INTO tours (title, description, attractions, duration, price, category, image_url, capacity, tour_date, is_active)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             RETURNING *
         `;
         
@@ -170,7 +170,8 @@ const createTour = async (req, res) => {
             category,
             finalImageUrl,
             capacity || 20,
-            tour_date || null
+            tour_date || null,
+            is_active === undefined ? true : (is_active === true || is_active === 'true')
         ];
         
         const result = await pool.query(query, values);
@@ -211,6 +212,9 @@ const updateTour = async (req, res) => {
         if (req.file) {
             finalImageUrl = await uploadImageToCloudinary(req.file);
         }
+        if (finalImageUrl === '') {
+            finalImageUrl = null;
+        }
         
         // Convertir attractions a array si es string
         const attractionsArray = Array.isArray(attractions) ? attractions : 
@@ -245,7 +249,7 @@ const updateTour = async (req, res) => {
             paramCount++;
         }
         
-        if (price !== undefined && price !== null) {
+        if (price !== undefined && price !== null && price !== '') {
             updates.push(`price = $${paramCount}`);
             values.push(price);
             paramCount++;
@@ -265,11 +269,11 @@ const updateTour = async (req, res) => {
         
         if (is_active !== undefined) {
             updates.push(`is_active = $${paramCount}`);
-            values.push(is_active);
+            values.push(is_active === true || is_active === 'true');
             paramCount++;
         }
         
-        if (capacity !== undefined && capacity !== null) {
+        if (capacity !== undefined && capacity !== null && capacity !== '') {
             updates.push(`capacity = $${paramCount}`);
             values.push(capacity);
             paramCount++;
@@ -277,7 +281,7 @@ const updateTour = async (req, res) => {
         
         if (tour_date !== undefined) {
             updates.push(`tour_date = $${paramCount}`);
-            values.push(tour_date);
+            values.push(tour_date === '' ? null : tour_date);
             paramCount++;
         }
         

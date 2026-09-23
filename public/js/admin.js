@@ -244,7 +244,9 @@ function renderTourRow(tour) {
     const hasCapacity = tour.capacity > 0;
     const isAvailable = tour.is_active && isDateValid && hasCapacity;
     
-    const formattedDate = tour.tour_date ? new Date(tour.tour_date).toLocaleDateString('es-MX') : 'No especificada';
+    const formattedDate = tour.tour_date
+        ? String(tour.tour_date).slice(0, 10).split('-').reverse().join('/')
+        : 'No especificada';
     
     return `
         <tr>
@@ -320,7 +322,7 @@ function openTourModal(tour = null) {
         document.getElementById('tourAttractions').value = tour.attractions ? tour.attractions.join(', ') : '';
         document.getElementById('tourImageUrl').value = tour.image_url || '';
         document.getElementById('tourCapacity').value = tour.capacity || 20;
-        document.getElementById('tourDate').value = tour.tour_date || '';
+        document.getElementById('tourDate').value = tour.tour_date ? String(tour.tour_date).slice(0, 10) : '';
         document.getElementById('tourIsActive').checked = tour.is_active;
     } else {
         // Crear nuevo tour
@@ -375,25 +377,15 @@ function editTour(id) {
 
 // Guardar tour
 async function saveTour() {
-    console.log('saveTour called');
     const form = document.getElementById('tourForm');
     
-    console.log('Form:', form);
-    console.log('currentTourId:', currentTourId);
-    
     if (!form.checkValidity()) {
-        console.log('Form validation failed');
         form.reportValidity();
         return;
     }
     
-    console.log('Form validation passed');
-    
     const imageFile = document.getElementById('tourImage').files[0];
     const currentImageUrl = document.getElementById('tourImageUrl').value;
-    
-    console.log('imageFile:', imageFile);
-    console.log('currentImageUrl:', currentImageUrl);
     
     const saveBtn = document.getElementById('saveTourBtn');
     saveBtn.disabled = true;
@@ -401,7 +393,6 @@ async function saveTour() {
     
     try {
         const token = localStorage.getItem('adminToken') || sessionStorage.getItem('adminToken');
-        console.log('Token:', token ? 'exists' : 'missing');
         
         // Crear FormData con todos los campos del tour
         const formData = new FormData();
@@ -417,11 +408,9 @@ async function saveTour() {
         
         // Si hay una nueva imagen, agregarla al FormData
         if (imageFile) {
-            console.log('Adding image file to FormData');
             formData.append('image', imageFile);
         } else if (currentImageUrl) {
             // Si no hay nueva imagen pero hay una URL existente, enviarla
-            console.log('Adding image URL to FormData');
             formData.append('image_url', currentImageUrl);
         }
         
@@ -433,9 +422,6 @@ async function saveTour() {
             method = 'PUT';
         }
         
-        console.log('Request URL:', url);
-        console.log('Request method:', method);
-        
         const response = await fetch(url, {
             method: method,
             headers: {
@@ -444,9 +430,7 @@ async function saveTour() {
             body: formData
         });
         
-        console.log('Response status:', response.status);
         const data = await response.json();
-        console.log('Response data:', data);
         
         if (data.success) {
             // Si hay imágenes adicionales, subirlas después de crear/actualizar el tour
@@ -466,8 +450,8 @@ async function saveTour() {
             });
             
             tourModal.hide();
-            loadTours();
-            loadStats();
+            await loadTours();
+            await loadStats();
         } else {
             throw new Error(data.message || 'Error al guardar el tour');
         }
@@ -527,7 +511,8 @@ async function toggleTourStatus(id, event) {
                 showConfirmButton: false
             });
             
-            loadTours();
+            await loadTours();
+            await loadStats();
         } else {
             throw new Error(data.message || 'Error al actualizar el tour');
         }
