@@ -274,13 +274,18 @@ const runMigrations = async () => {
 
 testConnection().then(async success => {
     console.log('🔍 Conexión a base de datos:', success);
-    if (success) {
-        await runMigrations();
+    // Ejecutar migraciones siempre, independientemente del resultado de testConnection
+    await runMigrations();
+    startServer();
+}).catch(error => {
+    console.error('❌ Error al conectar a base de datos:', error);
+    // Intentar ejecutar migraciones de todas formas
+    runMigrations().then(() => {
         startServer();
-    } else {
-        console.error('No se pudo iniciar el servidor debido a error de conexión a la base de datos');
+    }).catch(err => {
+        console.error('❌ Error crítico:', err);
         process.exit(1);
-    }
+    });
 });
 
 // Manejo graceful shutdown
