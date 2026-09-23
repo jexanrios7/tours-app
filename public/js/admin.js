@@ -375,12 +375,18 @@ function editTour(id) {
 
 // Guardar tour
 async function saveTour() {
+    console.log('saveTour called');
     const form = document.getElementById('tourForm');
     
+    console.log('Form:', form);
+    
     if (!form.checkValidity()) {
+        console.log('Form validation failed');
         form.reportValidity();
         return;
     }
+    
+    console.log('Form validation passed');
     
     const imageFile = document.getElementById('tourImage').files[0];
     const currentImageUrl = document.getElementById('tourImageUrl').value;
