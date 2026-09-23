@@ -129,6 +129,47 @@ app.get('/api/migrate', async (req, res) => {
     }
 });
 
+// Endpoint para verificar si las tablas existen
+app.get('/api/check-tables', async (req, res) => {
+    try {
+        const adminsCheck = await pool.query(`
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_name = 'admins'
+            )
+        `);
+        
+        const toursCheck = await pool.query(`
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_name = 'tours'
+            )
+        `);
+        
+        const contactsCheck = await pool.query(`
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_name = 'contacts'
+            )
+        `);
+        
+        res.json({
+            success: true,
+            tables: {
+                admins: adminsCheck.rows[0].exists,
+                tours: toursCheck.rows[0].exists,
+                contacts: contactsCheck.rows[0].exists
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error al verificar tablas',
+            error: error.message
+        });
+    }
+});
+
 // Ruta principal - servir index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
