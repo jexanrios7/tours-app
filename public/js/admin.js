@@ -511,7 +511,8 @@ async function toggleTourStatus(id, event) {
                 showConfirmButton: false
             });
             
-            loadTours();
+            await loadTours();
+            await loadStats();
         } else {
             throw new Error(data.message || 'Error al actualizar el tour');
         }
