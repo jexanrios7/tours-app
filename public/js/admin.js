@@ -432,7 +432,7 @@ async function saveTour() {
         formData.append('attractions', document.getElementById('tourAttractions').value);
         formData.append('capacity', document.getElementById('tourCapacity').value);
         formData.append('tour_date', document.getElementById('tourDate').value);
-        formData.append('is_active', document.getElementById('tourIsActive').checked);
+        formData.append('is_active', document.getElementById('tourIsActive').checked ? 'true' : 'false');
         
         // Si hay una nueva imagen, agregarla al FormData
         if (imageFile) {
