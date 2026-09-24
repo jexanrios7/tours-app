@@ -168,8 +168,11 @@ async function loadTours() {
         const response = await fetch(`${API_URL}/tours`);
         const data = await response.json();
         
+        console.log('loadTours response:', data);
+        
         if (data.success) {
             allTours = data.data;
+            console.log('Tours loaded from server:', allTours);
             renderTours(allTours);
         } else {
             showToast('Error', 'No se pudieron cargar los tours', 'error');
@@ -184,6 +187,9 @@ async function loadTours() {
 
 // Renderizar tours en las secciones separadas
 function renderTours(tours) {
+    console.log('renderTours called with', tours.length, 'tours');
+    console.log('All tours data:', tours);
+    
     const loadingSpinner = document.getElementById('loadingSpinner');
     const availableToursContainer = document.getElementById('availableToursContainer');
     const unavailableToursContainer = document.getElementById('unavailableToursContainer');
@@ -203,6 +209,16 @@ function renderTours(tours) {
         const isDateValid = tourDate ? tourDate >= today : true;
         const hasCapacity = tour.capacity > 0;
         const isActive = tour.is_active === true;
+        
+        console.log(`Tour "${tour.title}":`, {
+            isActive,
+            tourDate,
+            isDateValid,
+            hasCapacity,
+            capacity: tour.capacity,
+            isAvailable: isActive && isDateValid && hasCapacity
+        });
+        
         return isActive && isDateValid && hasCapacity;
     });
     
@@ -213,6 +229,9 @@ function renderTours(tours) {
         const isActive = tour.is_active === true;
         return !isActive || !isDateValid || !hasCapacity;
     });
+    
+    console.log('Available tours:', availableTours.length);
+    console.log('Unavailable tours:', unavailableTours.length);
     
     // Renderizar tours disponibles
     if (availableTours.length === 0) {
