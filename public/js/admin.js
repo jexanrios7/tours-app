@@ -94,7 +94,11 @@ function setupEventListeners() {
     });
     
     // Botón guardar tour
-    document.getElementById('saveTourBtn').addEventListener('click', saveTour);
+    document.getElementById('saveTourBtn').addEventListener('click', (e) => {
+        console.log('Save button clicked!');
+        console.log('Event:', e);
+        saveTour(e);
+    });
     
     // Preview de imagen al seleccionar archivo
     document.getElementById('tourImage').addEventListener('change', handleImageSelect);
