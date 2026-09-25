@@ -129,10 +129,27 @@ const getTourById = async (req, res) => {
 // Crear un nuevo tour (solo admin)
 const createTour = async (req, res) => {
     try {
+        console.log('=== CREATE TOUR DEBUG ===');
+        console.log('Request body:', req.body);
+        console.log('Request file:', req.file);
+        console.log('Request files:', req.files);
+        
         const { title, description, attractions, duration, price, category, image_url, capacity, tour_date, is_active } = req.body;
         
         // Convertir is_active de string a boolean si viene como string
         const isActive = is_active === 'true' || is_active === true;
+        
+        console.log('Processed values:', {
+            title,
+            description,
+            duration,
+            price,
+            category,
+            image_url,
+            capacity,
+            tour_date,
+            isActive
+        });
         
         // Validaciones básicas
         if (!title || !description || !duration || !price || !category) {
@@ -179,6 +196,8 @@ const createTour = async (req, res) => {
         
         const result = await pool.query(query, values);
         const tour = result.rows[0];
+        
+        console.log('Tour created in database:', tour);
         
         // Insertar imágenes adicionales en tour_images
         if (additionalImages.length > 0) {

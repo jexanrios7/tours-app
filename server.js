@@ -214,6 +214,24 @@ app.get('/api/check-admin', async (req, res) => {
     }
 });
 
+// Endpoint de debugging para ver tours en la base de datos
+app.get('/api/debug/tours', async (req, res) => {
+    try {
+        const tours = await pool.query('SELECT * FROM tours ORDER BY created_at DESC');
+        res.json({
+            success: true,
+            count: tours.rows.length,
+            data: tours.rows
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener tours de debugging',
+            error: error.message
+        });
+    }
+});
+
 // Ruta principal - servir index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
