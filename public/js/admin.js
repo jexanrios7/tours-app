@@ -95,19 +95,9 @@ function setupEventListeners() {
         openTourModal();
     });
     
-    // Botón guardar tour
+    // Botón guardar tour - se maneja con onclick en el HTML
     const saveBtn = document.getElementById('saveTourBtn');
     console.log('Save button element:', saveBtn);
-    if (saveBtn) {
-        saveBtn.addEventListener('click', (e) => {
-            console.log('Save button clicked!');
-            console.log('Event:', e);
-            saveTour(e);
-        });
-        console.log('Save button event listener attached');
-    } else {
-        console.error('Save button not found!');
-    }
     
     // Preview de imagen al seleccionar archivo
     document.getElementById('tourImage').addEventListener('change', handleImageSelect);
@@ -406,7 +396,7 @@ function editTour(id) {
 }
 
 // Guardar tour
-async function saveTour() {
+window.saveTour = async function() {
     console.log('saveTour called');
     const form = document.getElementById('tourForm');
     
