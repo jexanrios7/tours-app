@@ -85,6 +85,8 @@ async function checkAuth() {
 
 // Configurar event listeners
 function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    
     // Botón ver todos los mensajes
     document.getElementById('viewAllMessagesBtn').addEventListener('click', viewAllMessages);
     
@@ -94,7 +96,18 @@ function setupEventListeners() {
     });
     
     // Botón guardar tour
-    document.getElementById('saveTourBtn').addEventListener('click', saveTour);
+    const saveBtn = document.getElementById('saveTourBtn');
+    console.log('Save button element:', saveBtn);
+    if (saveBtn) {
+        saveBtn.addEventListener('click', (e) => {
+            console.log('Save button clicked!');
+            console.log('Event:', e);
+            saveTour(e);
+        });
+        console.log('Save button event listener attached');
+    } else {
+        console.error('Save button not found!');
+    }
     
     // Preview de imagen al seleccionar archivo
     document.getElementById('tourImage').addEventListener('change', handleImageSelect);
